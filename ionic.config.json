@@ -1,0 +1,7 @@
+{
+  "name": "videojs_issue",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
