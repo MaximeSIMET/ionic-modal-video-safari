@@ -1,25 +1,22 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {ModalController} from "@ionic/angular";
+import {ModalTwoComponent} from "../modaltwo/modaltwo.component";
 
 @Component({
   selector: 'app-modal',
-  template: `<div #videoWrapper ></div>`,
+  template: `<ion-button (click)="openModalTwo()">Open second modal</ion-button>`,
   styleUrls: ['./modal.component.scss'],
 })
-export class ModalComponent implements OnInit {
+export class ModalComponent {
   @ViewChild('videoWrapper', { static: true }) videoWrapper: ElementRef;
 
-  constructor() { }
+  constructor(private modalCtrl: ModalController) { }
 
-  ngOnInit() {
-    const playerHTML = `
-       <video
-    controls
-    preload="auto"
-    width="640"
-    height="264"
-  >
-    <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4" />
-  </video>`;
-    this.videoWrapper.nativeElement.innerHTML = playerHTML;
+  openModalTwo() {
+    this.modalCtrl.create({
+      component: ModalTwoComponent,
+      backdropDismiss: true,
+      cssClass: 'allow-fullscreen'
+    }).then(r => r.present());
   }
 }
