@@ -30,3 +30,9 @@ ion-modal.allow-fullscreen:-webkit-full-screen-ancestor {
     --height: 100vh;
     --width: 100vw;
 }
+
+// Sets
+ion-modal.z-auto {
+    z-index: auto !important;
+}
+
