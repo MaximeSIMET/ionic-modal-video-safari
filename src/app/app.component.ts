@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -7,27 +7,28 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private modalCtrl: ModalController) {
+  constructor(private modalCtrl: ModalController, private renderer: Renderer2) {
     // This listener is specfic to safari browsers and triggers when entering and exiting fullscreen
     // Using this event to adjust the css of any open modals except
-    document.addEventListener('webkitfullscreenchange', async (e) => {
-      // boolean that defines the current fullscreen state
-      const isCurrentlyFullscreen = document['webkitIsFullScreen'];
-
-      // Get the top-most modal
-      const topModal = await this.modalCtrl.getTop();
-
-      //Create an array of modals that are NOT the top
-      const modals = Array.from(document.getElementsByTagName('ion-modal')).filter(x => x !== topModal);
-
-      //Loop through the modals and add/remove the css class (from global.scss) that forces 'z-index: auto'
-      modals.forEach(modal => {
-          if(isCurrentlyFullscreen) {
-            modal.classList.add('z-auto');
-          } else {
-            modal.classList.remove('z-auto');
-          }
-        });
-    });
-  }
+    renderer.listen('document', 'webkitfullscreenchange', (e) => {
+      const video = e.target as HTMLVideoElement;
+      const dom = video?.ownerDocument;
+      const isCurrentlyFullscreen = video['webkitDisplayingFullscreen'];
+      if(video !== undefined && dom !== undefined) {
+        // Get the top-most modal
+        this.modalCtrl.getTop().then(modal => {
+          //Create an array of modals that are NOT the top
+          const modals = Array.from(dom.getElementsByTagName('ion-modal')).filter(x => x !== modal);
+          //Loop through the modals and add/remove the css class (from global.scss) that forces 'z-index: auto'
+          modals.forEach(m => {
+            if(isCurrentlyFullscreen) {
+              m.classList.add('z-auto');
+            } else {
+              m.classList.remove('z-auto');
+            }
+          });
+        });  
+      }  
+  });
+}
 }

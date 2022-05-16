@@ -15,7 +15,6 @@ export class HomePage {
     this.modalCtrl.create({
       component: ModalComponent,
       backdropDismiss: true,
-      cssClass: 'allow-fullscreen'
     }).then(r => r.present());
   }
 

@@ -25,13 +25,23 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+/* These overrides aer workarounds due to apparent webkit issues when fullscreen.
+- In one case, the browser default z-index/position values cannot be overridden when fullscreen */
 
+
+/* Forces modals with the allow-fullscreen cssClass to go fullscreen */
 ion-modal.allow-fullscreen:-webkit-full-screen-ancestor {
     --height: 100vh;
     --width: 100vw;
 }
 
-// Sets
+/* Prevents clicks on the backdrop when in fullscreen for the modals with the 'allow-fullscreen' cssClass */
+ion-modal.allow-fullscreen:-webkit-full-screen-ancestor::part(backdrop) {
+    pointer-events: none;
+}
+
+
+/* Sets z-index for any modals that are not at the top (this is set via renderer2 in app.comoponent.ts) */
 ion-modal.z-auto {
     z-index: auto !important;
 }
